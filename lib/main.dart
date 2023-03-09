@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:paninoexpress/flutter_advanced_drawer.dart';
 import 'package:paninoexpress/pages/CarrelloPage.dart';
 import 'package:paninoexpress/pages/RicaricaPage.dart';
 import 'package:paninoexpress/pages/homePage.dart';
-import 'package:paninoexpress/pages/homePage_wlogin.dart';
-import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:paninoexpress/pages/login.dart';
 import 'package:paninoexpress/pages/order.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(const PaninoExpress());
