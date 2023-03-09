@@ -1,9 +1,10 @@
 import 'dart:convert';
+import 'package:paninoexpress/models.dart';
 import 'package:paninoexpress/pages/SecondStepOrderPage.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/services.dart' show rootBundle;
-
+import 'package:http/http.dart' as http;
 class Panino {
   String pane = "";
   String IMGpane = "";
@@ -111,11 +112,21 @@ class FirstStepOrderPage extends StatefulWidget {
 class _FirstStepOrderPageState extends State<FirstStepOrderPage> {
   List<Map<String, dynamic>> _FirstStepOrder = [];
   final panino = Panino();
+  //List<Ingredient> ingredients = [];
+
+  void retrieveIngredients() async{
+    final response = await http.get(Uri.parse('http://justitis.com:8000/ingredient'));
+    if(response.statusCode == 200){
+      Ingredients ingredients = Ingredients.fromJson(jsonDecode(response.body));
+      print(ingredients);
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    _caricaFirstStepOrder();
+    //_caricaFirstStepOrder();
+    retrieveIngredients();
   }
 
   String _currentImage = "";
@@ -144,7 +155,7 @@ class _FirstStepOrderPageState extends State<FirstStepOrderPage> {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back_ios_new_rounded,
             color: Colors.black,
             size: 35,
@@ -152,7 +163,7 @@ class _FirstStepOrderPageState extends State<FirstStepOrderPage> {
         ),
         actions: <Widget>[
           IconButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.shopping_cart_outlined,
               color: Colors.black,
               size: 35,
@@ -182,7 +193,7 @@ class _FirstStepOrderPageState extends State<FirstStepOrderPage> {
                   ? CarouselSlider(
                       options: CarouselOptions(
                           autoPlay: false,
-                          autoPlayInterval: Duration(seconds: 3),
+                          autoPlayInterval: const Duration(seconds: 3),
                           viewportFraction: 0.3,
                           height: 200,
                           enableInfiniteScroll: false,
@@ -194,8 +205,8 @@ class _FirstStepOrderPageState extends State<FirstStepOrderPage> {
                             return InkWell(
                               child: Container(
                                 width: MediaQuery.of(context).size.width,
-                                margin: EdgeInsets.symmetric(horizontal: 5.0),
-                                decoration: BoxDecoration(
+                                margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                                decoration: const BoxDecoration(
                                   color: Colors.transparent,
                                 ),
                                 child: Column(
@@ -214,7 +225,7 @@ class _FirstStepOrderPageState extends State<FirstStepOrderPage> {
                   );
                 }).toList(),
               )
-            : Center(
+            : const Center(
                 child: CircularProgressIndicator(),
               ),
       
@@ -237,7 +248,7 @@ class _FirstStepOrderPageState extends State<FirstStepOrderPage> {
                       
                       child:  _currentImage != ""
                               ? Image.network(_currentImage)
-                              : Text('Non hai selezionato niente')
+                              : const Text('Non hai selezionato niente')
                        
                       
                         

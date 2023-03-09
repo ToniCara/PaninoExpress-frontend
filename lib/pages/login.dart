@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:paninoexpress/main.dart';
+import 'package:paninoexpress/pages/homePage.dart';
+import 'package:paninoexpress/pages/menuPage.dart';
+import 'package:paninoexpress/pages/splashpage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -9,6 +15,71 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginState extends State<LoginPage> {
+  var token = '';
+  GoogleSignInAccount? _currentUser;
+  String photoUrl = '';
+
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    clientId:
+        '218796606716-eg6uigl00714gc7rc1lsqhoj2g43padl.apps.googleusercontent.com',
+    scopes: ['email', 'profile', 'openid'],
+  );
+
+  void load() async {
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
+    setState(() {
+      token = _prefs.getString('token')!;
+    });
+  }
+
+  void signIn() async {
+    setState(() async {
+      if (_currentUser == null) {
+        await _googleSignIn.signIn();
+        suca();
+      }
+    });
+  }
+
+  void suca() {
+    Navigator.of(context).push(PageRouteBuilder(
+      transitionDuration: const Duration(milliseconds: 600),
+      reverseTransitionDuration: const Duration(milliseconds: 600),
+      pageBuilder: (context, animation, secondaryAnimation) => PaninoExpress(),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(1.0, 0.0); //Initial page position
+        const end = Offset.zero; //last page position
+        const curve = Curves.easeInOut;
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
+    ));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) {
+      setState(() {
+        _currentUser = account;
+      });
+      if (_currentUser != null) {
+        setState(() async {
+          GoogleSignInAuthentication data = await _currentUser!.authentication;
+          SharedPreferences _prefs = await SharedPreferences.getInstance();
+          await _prefs.setString('token', data.accessToken as String);
+          token = data.accessToken as String;
+          print(_currentUser!.photoUrl!);
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,13 +89,13 @@ class _LoginState extends State<LoginPage> {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: Icon(Icons.arrow_back_ios_rounded),
+          icon: const Icon(Icons.arrow_back_ios_rounded),
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage("images/login.jpg"),
             fit: BoxFit.cover,
@@ -75,12 +146,7 @@ class _LoginState extends State<LoginPage> {
                       ),
                     ),
                     onTap: () {
-
-
-
-
-
-
+                      signIn();
 
                       // Navigator.of(context)
                       // .push( PageRouteBuilder(
