@@ -50,7 +50,7 @@ class AdvancedDrawer extends StatefulWidget {
   /// NOTICE: It may cause animation jerks.
   final bool animateChildDecoration;
 
-  /// Opening from Right-to-left.
+  /// Opening from Right-to-Right.
   final bool rtlOpening;
 
   /// Disable gestures.
@@ -137,8 +137,8 @@ class _AdvancedDrawerState extends State<AdvancedDrawer>
             children: <Widget>[
               Align(
                 alignment: widget.rtlOpening
-                    ? Alignment.centerRight
-                    : Alignment.centerLeft,
+                    ? Alignment.centerLeft
+                    : Alignment.centerRight,
                 child: FractionallySizedBox(
                   widthFactor: widget.openRatio,
                   child: ScaleTransition(
@@ -153,7 +153,7 @@ class _AdvancedDrawerState extends State<AdvancedDrawer>
               SlideTransition(
                 position: _childSlideAnimation,
                 textDirection:
-                    widget.rtlOpening ? TextDirection.rtl : TextDirection.ltr,
+                    widget.rtlOpening ? TextDirection.ltr : TextDirection.rtl,
                 child: ScaleTransition(
                   scale: _childScaleAnimation,
                   child: Builder(

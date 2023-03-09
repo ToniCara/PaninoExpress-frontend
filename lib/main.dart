@@ -22,6 +22,7 @@ class PaninoExpress extends StatelessWidget {
         primarySwatch: Colors.orange,
       ),
       home: HomeScreen(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
